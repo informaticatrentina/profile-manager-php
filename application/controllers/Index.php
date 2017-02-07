@@ -115,17 +115,18 @@ class Index extends CI_Controller
        if(!file_exists($data['photo']))
        {         
          header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
-         header('Content-Length: ' . filesize($data['photo']));
+         header("Content-Length: " . filesize($data['photo']));
+         header("Content-Disposition: inline; filename=".$data['photo']);
          readfile($data['photo']);
-         exit();
+         exit(0);
        }
        else
        {
          $data['photo']=$_SERVER['DOCUMENT_ROOT'].'/img/foto_anonima_150.jpg';
          header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
-         header('Content-Length: ' . filesize($data['photo']));
+         header("Content-Disposition: inline; filename=".$data['photo']);
          readfile($data['photo']);
-         exit();
+         exit(0);
        }
     }
     
