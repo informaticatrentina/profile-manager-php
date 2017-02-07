@@ -228,7 +228,7 @@ class Index extends CI_Controller
           if(empty($json['response']))
           {
             $json['response']='success';
-            $json['link']=base_url().'show/'.$user_id;  
+            $json['link']=base_url().'detail/'.$user_id;  
           }       
         }
         $this->output->set_content_type('application/json')->set_output(json_encode($json));

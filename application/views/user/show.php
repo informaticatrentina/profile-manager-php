@@ -127,7 +127,7 @@
                 <div class="row-fluid">
                     <div class="span12">
                     <?php if(file_exists($photo)): ?>                
-                      <img src="/upload/images/<?php echo $user_data['_id'].'_thumb.jpg'; ?>" alt="La tua foto"/>
+                      <img src="/upload/images/<?php echo $user_data['_id'].'_150.jpg'; ?>" alt="La tua foto"/>
                     <?php else: ?>
                       <img src="/img/foto_anonima.jpg" alt="La tua foto"/>
                     <?php endif; ?>    		              
