@@ -116,7 +116,7 @@ class Index extends CI_Controller
        {         
          header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
          header("Content-Length: " . filesize($data['photo']));
-         header("Content-Disposition: inline; filename=".$data['photo']);
+         header("Content-Disposition: inline; filename=".basename($data['photo']));
          readfile($data['photo']);
          exit(0);
        }
