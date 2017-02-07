@@ -85,7 +85,7 @@ class Index extends CI_Controller
       else
       {
         $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
-        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_thumb.jpg';
+        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
         $this->load->view('user/edit',$data);       
       }      
     }
@@ -103,7 +103,7 @@ class Index extends CI_Controller
       else
       {
         $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
-        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_thumb.jpg';
+        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
         $this->load->view('user/show',$data);       
       }      
     }
@@ -111,7 +111,7 @@ class Index extends CI_Controller
     public function show($user_id)
     {
        $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
-       $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_thumb.jpg';
+       $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
        die(print_r($data['photo']));
     }
     
@@ -203,9 +203,9 @@ class Index extends CI_Controller
               }
             
               // Creo la miniatura - se esiste già la cancello
-              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_thumb'.strtolower($data['file_ext'])))
+              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_150'.strtolower($data['file_ext'])))
               {
-                @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_thumb'.strtolower($data['file_ext']));
+                @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_150'.strtolower($data['file_ext']));
               }
             
               $config['image_library'] = 'gd2';
@@ -260,7 +260,7 @@ class Index extends CI_Controller
     preg_match('/(?<extension>\.\w+)$/im', $filename, $matches);
     $extension = $matches['extension'];
     // thumbnail //
-    $thumbnail = preg_replace('/(\.\w+)$/im', '', $filename) . '_thumb' . $extension;
+    $thumbnail = preg_replace('/(\.\w+)$/im', '', $filename) . '_150' . $extension;
     return $thumbnail;
     }
     
