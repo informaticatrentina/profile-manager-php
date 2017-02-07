@@ -62,7 +62,7 @@
           <div class="nav-collapse collapse">
           <ul class="nav" id="nav-menu">   
             <li class="hidden-desktop">
-              <a href="/detail/<?php echo $user_data['_id']; ?>" target="blank">	   
+              <a href="/show/<?php echo $user_data['_id']; ?>" target="blank">	   
                 <?php if(isset($user_data['sex']) && $user_data['sex']=='F'): ?>Benvenuta, <?php else: ?>Benvenuto, <?php endif; ?>
                 <strong>
                 <?php if(isset($user_data['firstname']) && !empty($user_data['firstname'])): ?><?php echo $user_data['firstname']; ?><?php endif; ?>
@@ -76,7 +76,7 @@
           </ul>
 		      <ul id="nav-login" class="nav pull-right visible-desktop">
             <li class="visible-desktop">
-              <a href="/detail/<?php echo $user_data['_id']; ?>" target="blank">
+              <a href="/show/<?php echo $user_data['_id']; ?>" target="blank">
                 <?php if(isset($user_data['sex']) && $user_data['sex']=='F'): ?>Benvenuta, <?php else: ?>Benvenuto, <?php endif; ?>
                 <strong>
                 <?php if(isset($user_data['firstname']) && !empty($user_data['firstname'])): ?><?php echo $user_data['firstname']; ?><?php endif; ?>

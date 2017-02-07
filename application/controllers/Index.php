@@ -90,7 +90,7 @@ class Index extends CI_Controller
       }      
     }
     
-    public function detail($user_id)
+    public function show($user_id)
     {      
       $sess_id=$this->session->userdata('_id');
       
@@ -108,10 +108,10 @@ class Index extends CI_Controller
       }      
     }
     
-    public function show($user_id)
+    public function photo($user_id,$dim)
     {
        $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
-       $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
+       $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_'.$dim.'.jpg';
        if(file_exists($data['photo']))
        {         
          header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
@@ -219,6 +219,30 @@ class Index extends CI_Controller
               {
                 @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_150'.strtolower($data['file_ext']));
               }
+              
+              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_350'.strtolower($data['file_ext'])))
+              {
+                @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_350'.strtolower($data['file_ext']));
+              }
+              
+              $this->load->library('image_lib');
+              
+              $config['image_library'] = 'gd2';
+              $config['source_image'] = $_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['file_name']);
+              $config['new_image'] = $_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_350'.strtolower($data['file_ext']);
+              $config['create_thumb'] = FALSE;
+              $config['maintain_ratio'] = TRUE;
+              $config['width'] = 350;
+              $config['height'] = 350;
+              $this->image_lib->initialize($config);
+
+              if (!$this->image_lib->resize()) 
+              {
+                $json['response']='error';
+                $json['message']='<div class="alert alert-warning">'.$this->image_lib->display_errors().'</div>';   
+              } 
+              
+              $this->image_lib->clear();
             
               
               $config['image_library'] = 'gd2';
@@ -228,7 +252,7 @@ class Index extends CI_Controller
               $config['maintain_ratio'] = TRUE;
               $config['width'] = 150;
               $config['height'] = 150;
-              $this->load->library('image_lib', $config);
+              $this->image_lib->initialize($config);
 
               if (!$this->image_lib->resize()) 
               {
@@ -243,7 +267,7 @@ class Index extends CI_Controller
           if(empty($json['response']))
           {
             $json['response']='success';
-            $json['link']=base_url().'detail/'.$user_id;  
+            $json['link']=base_url().'show/'.$user_id;  
           }       
         }
         $this->output->set_content_type('application/json')->set_output(json_encode($json));
