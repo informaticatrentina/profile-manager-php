@@ -208,20 +208,23 @@ class Index extends CI_Controller
                 @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_150'.strtolower($data['file_ext']));
               }
             
+              
               $config['image_library'] = 'gd2';
               $config['source_image'] = $_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['file_name']);
-              $config['create_thumb'] = TRUE;
+              $config['new_image'] = $_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_150'.strtolower($data['file_ext']);
+              $config['create_thumb'] = FALSE;
               $config['maintain_ratio'] = TRUE;
               $config['width'] = 150;
               $config['height'] = 150;
-            
               $this->load->library('image_lib', $config);
 
               if (!$this->image_lib->resize()) 
               {
                 $json['response']='error';
                 $json['message']='<div class="alert alert-warning">'.$this->image_lib->display_errors().'</div>';   
-              }              
+              } 
+              
+              $this->image_lib->clear();
             }
           }          
           
@@ -234,36 +237,7 @@ class Index extends CI_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($json));
       }
     }
-    
-    private function _generate_thumb($filename, $path = '')
-    {
-      // if path is not given use default path //
-      if (!$path) {
-        $path = FCPATH . 'somedir' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR;
-      }
 
-      $config['image_library'] = 'gd2';
-      $config['source_image'] = $path . $filename;
-      $config['create_thumb'] = TRUE;
-      $config['maintain_ratio'] = TRUE;
-      $config['width'] = 150;
-      $config['height'] = 150;
-
-      $this->load->library('image_lib', $config);
-
-      if (!$this->image_lib->resize()) 
-      {
-        $this->_message= $this->image_lib->display_errors();
-        return FALSE;
-      }
-    // get file extension //
-    preg_match('/(?<extension>\.\w+)$/im', $filename, $matches);
-    $extension = $matches['extension'];
-    // thumbnail //
-    $thumbnail = preg_replace('/(\.\w+)$/im', '', $filename) . '_150' . $extension;
-    return $thumbnail;
-    }
-    
     public function logout()
     {
       $this->session->sess_destroy();
