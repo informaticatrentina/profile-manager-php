@@ -90,7 +90,7 @@ class Index extends CI_Controller
       }      
     }
     
-    public function show($user_id)
+    public function detail($user_id)
     {      
       $sess_id=$this->session->userdata('_id');
       
@@ -106,6 +106,13 @@ class Index extends CI_Controller
         $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_thumb.jpg';
         $this->load->view('user/show',$data);       
       }      
+    }
+    
+    public function show($user_id)
+    {
+       $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
+       $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_thumb.jpg';
+       die(print_r($data['photo']));
     }
     
     public function save()

@@ -62,5 +62,6 @@ $route['translate_uri_dashes'] = TRUE;
 $route['auth/login'] = 'Index/auth';
 $route['auth/logout'] = 'Index/logout';
 $route['edit/(:any)'] = 'Index/edit/$1';
+$route['detail/(:any)'] = 'Index/detail/$1';
 $route['show/(:any)'] = 'Index/show/$1';
 $route['save'] = 'Index/save';
