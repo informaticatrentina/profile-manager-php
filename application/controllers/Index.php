@@ -112,7 +112,21 @@ class Index extends CI_Controller
     {
        $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
-       die(print_r($data['photo']));
+       if(!file_exists($data['photo']))
+       {         
+         header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
+         header('Content-Length: ' . filesize($data['photo']));
+         readfile($data['photo']);
+         exit();
+       }
+       else
+       {
+         $data['photo']=$_SERVER['DOCUMENT_ROOT'].'/img/foto_anonima_150.jpg';
+         header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
+         header('Content-Length: ' . filesize($data['photo']));
+         readfile($data['photo']);
+         exit();
+       }
     }
     
     public function save()
