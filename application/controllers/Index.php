@@ -134,7 +134,7 @@ class Index extends CI_Controller
         $this->form_validation->set_rules('_id', '_id', 'required|trim');
         $this->form_validation->set_rules('firstname', 'Nome', 'required|trim|min_length[1]|max_length[132]');
         $this->form_validation->set_rules('lastname', 'Cognome', 'required|trim|min_length[1]|max_length[132]');
-        $this->form_validation->set_rules('nickname', 'Nick Name', 'required|trim|min_length[1]|max_length[132]|callback__checkNickName');       
+        if(isset($_POST['nickname']) && !empty($_POST['nickname'])) $this->form_validation->set_rules('nickname', 'Nick Name', 'required|trim|min_length[1]|max_length[132]|callback__checkNickName');       
         $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');       
         $this->form_validation->set_rules('biography', 'Biografia', 'trim|min_length[1]|max_length[150]');       
         $this->form_validation->set_rules('website', 'Website', 'trim|valid_url'); 

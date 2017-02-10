@@ -37,7 +37,7 @@ class ProfileManagerLibrary
     $result=curl_exec ($ch);
     $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);   //get status code
     curl_close ($ch);
-    
+   
     if($status_code==0)
     {
       $this->_message='Attenzione, Identity Manager non raggiungibile.';
