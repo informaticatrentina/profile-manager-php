@@ -163,6 +163,8 @@ class Index extends CI_Controller
           
           $password=xss_clean($this->input->post('new_password'));
           
+          $data['_updated'] = new MongoDate();
+          
           /* Campi obbligatori */
           $data=array('firstname' => $firstname, 'lastname' => $lastname, 'nickname' => $nickname, 'email' => $email);
           
