@@ -161,9 +161,7 @@ class Index extends CI_Controller
           $website=xss_clean($this->input->post('website'));
           $biography=xss_clean($this->input->post('biography'));
           
-          $password=xss_clean($this->input->post('new_password'));
-          
-          $data['_updated'] = new MongoDate();
+          $password=xss_clean($this->input->post('new_password'));          
           
           /* Campi obbligatori */
           $data=array('firstname' => $firstname, 'lastname' => $lastname, 'nickname' => $nickname, 'email' => $email);
