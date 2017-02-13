@@ -169,9 +169,10 @@
                                 <i class="icon-check-empty icon-stack-base"></i>
                                 <i class="icon-chevron-sign-right" style="top: -1px;"></i>
                             </span>
+                            <?php endif; ?>
+                            <?php if(isset($user_data['website']) && !empty($user_data['website'])): ?>
                             <a href="<?php echo $user_data['website']; ?>"><?php echo $user_data['website']; ?></a><br>
                             <?php endif; ?>
-
                     </div>
                 
      
