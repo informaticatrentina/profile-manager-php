@@ -6,7 +6,7 @@
  * @author	Stefano Beccalli
  * @copyright	Copyright (c) 2017
  * @link	http://www.jlbbooks.it
- * @since	Version 1.0.0
+ * @since	Version 2.0.0
  */
 class Index extends CI_Controller
 {
