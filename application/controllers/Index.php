@@ -85,7 +85,15 @@ class Index extends CI_Controller
       else
       {
         $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
-        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
+        if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg'))
+        {
+          $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
+        }
+        elseif(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.png'))
+        {
+          $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.png';
+        }
+        else $data['photo']=null;
         $this->load->view('user/edit',$data);       
       }      
     }
@@ -113,8 +121,6 @@ class Index extends CI_Controller
         }
         else $data['photo']=null;
 
-
-        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
         $this->load->view('user/show',$data);       
       }      
     }
