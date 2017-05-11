@@ -132,7 +132,6 @@ class Index extends CI_Controller
       }
       else $data['photo']=null;
 
-      $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_'.$dim.'.jpg';
       if(!empty($data['photo']))
       {         
         header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
