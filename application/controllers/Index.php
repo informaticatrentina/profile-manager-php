@@ -102,7 +102,18 @@ class Index extends CI_Controller
       }
       else
       {
-        $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
+        $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);
+        if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg'))
+        {
+          $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
+        }
+        elseif(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.png'))
+        {
+          $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.png';
+        }
+        else $data['photo']=null;
+
+
         $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
         $this->load->view('user/show',$data);       
       }      
@@ -110,21 +121,32 @@ class Index extends CI_Controller
     
     public function photo($user_id,$dim)
     {
-       $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
-       $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_'.$dim.'.jpg';
-       if(file_exists($data['photo']))
-       {         
-         header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
-         header("Content-Length: " . filesize($data['photo']));
-         readfile($data['photo']);
-       }
-       else
-       {
-         $data['photo']=$_SERVER['DOCUMENT_ROOT'].'/img/foto_anonima_150.jpg';
-         header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
-         header("Content-Length: " . filesize($data['photo']));
-         readfile($data['photo']);         
-       }
+      $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
+      if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_'.$dim.'.jpg'))
+      {
+        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_'.$dim.'.jpg';
+      }
+      elseif(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_'.$dim.'.png'))
+      {
+        $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_'.$dim.'.png';
+      }
+      else $data['photo']=null;
+
+      $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_'.$dim.'.jpg';
+      if(!empty($data['photo']))
+      {         
+        header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
+        header("Content-Length: " . filesize($data['photo']));
+        readfile($data['photo']);
+      }
+      else
+      {
+        if(file_exists($_SERVER['DOCUMENT_ROOT'].'/img/foto_anonima_'.$dim.'.jpg')) $data['photo']=$_SERVER['DOCUMENT_ROOT'].'/img/foto_anonima_'.$dim.'.jpg';
+        else $data['photo']=$_SERVER['DOCUMENT_ROOT'].'/img/foto_anonima_150.jpg';
+        header("Content-type: " .image_type_to_mime_type(exif_imagetype($data['photo'])));
+        header("Content-Length: " . filesize($data['photo']));
+        readfile($data['photo']);         
+      }
     }
     
     public function save()
@@ -193,7 +215,7 @@ class Index extends CI_Controller
             $config['upload_path'] = '.'.$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/';
             $config['file_name'] = $user_id;
             $config['overwrite'] = true;
-            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['allowed_types'] = 'jpg|png';
             $config['max_size'] = 1024;
             
             $this->load->library('upload', $config);
@@ -208,7 +230,22 @@ class Index extends CI_Controller
               $data = $this->upload->data();       
            
               // Rinomino il file lowercase
+
+              // Cancello eventuali immagini presenti con una diversa estensione
+              if($data['file_ext']=='png')
+              {
+                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_150.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_150.jpg');
+                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_350.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_350.jpg');
+                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'.jpg');
+              }
+              else
+              {
+                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_150.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_150.png');
+                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_350.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_350.png');
+                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'.png');
+              } 
             
+              // Rinomino il file (minuscolo)
               if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['file_name']))
               {
                 rename($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['file_name'],$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['file_name']));
@@ -242,8 +279,7 @@ class Index extends CI_Controller
                 $json['message']='<div class="alert alert-warning">'.$this->image_lib->display_errors().'</div>';   
               } 
               
-              $this->image_lib->clear();
-            
+              $this->image_lib->clear();            
               
               $config['image_library'] = 'gd2';
               $config['source_image'] = $_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['file_name']);
