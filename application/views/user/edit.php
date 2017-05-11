@@ -146,11 +146,11 @@
           <h3>La tua foto</h3>
             <div class="form-box form-box-1">
             <div class="fileupload-new thumbnail avatar-preview" style="width:150px;height:150px;">
-              <?php if(file_exists($photo)): ?>                
-                <img src="/upload/images/<?php echo $user_data['_id'].'_150.jpg'; ?>" alt="La tua foto"/>
-              <?php else: ?>
-                <img src="/img/foto_anonima.jpg" alt="La tua foto"/>
-              <?php endif; ?>              
+                    <?php if(!empty($photo)): ?>                                      
+                      <img src="/upload/images/<?php echo basename($photo); ?>" alt="La tua foto"/>
+                    <?php else: ?>
+                      <img src="/img/foto_anonima.jpg" alt="La tua foto"/>
+                    <?php endif; ?>                
             </div> 
             <input id="photo" name="photo" type="file">
               <div class="span12 desc">
