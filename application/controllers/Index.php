@@ -215,7 +215,6 @@ class Index extends CI_Controller
             $config['file_name'] = $user_id;
             $config['overwrite'] = true;
             $config['allowed_types'] = 'jpg|png';
-            $config['max_size'] = 1024;
             
             $this->load->library('upload', $config);
 
@@ -225,41 +224,23 @@ class Index extends CI_Controller
               $json['message']='<div class="alert alert-warning">'.$this->upload->display_errors().'</div>'; 
             }
             else
-            {    
+            {
+              // Cancello eventuali immagini presenti con una diversa estensione
+              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg');
+              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_350.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_350.jpg');
+              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'.jpg');
+ 
+              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.png');
+              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_350.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_350.png');
+              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'.png');   
+
               $data = $this->upload->data();       
            
               // Rinomino il file lowercase
-
-              // Cancello eventuali immagini presenti con una diversa estensione
-              if($data['file_ext']=='png')
-              {
-                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_150.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_150.jpg');
-                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_350.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_350.jpg');
-                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'.jpg')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'.jpg');
-              }
-              else
-              {
-                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_150.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_150.png');
-                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_350.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'_350.png');
-                if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'.png')) @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['raw_name']).'.png');
-              } 
-            
-              // Rinomino il file (minuscolo)
               if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['file_name']))
               {
                 rename($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['file_name'],$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.strtolower($data['file_name']));
-              }
-            
-              // Creo la miniatura - se esiste già la cancello
-              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_150'.strtolower($data['file_ext'])))
-              {
-                @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_150'.strtolower($data['file_ext']));
-              }
-              
-              if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_350'.strtolower($data['file_ext'])))
-              {
-                @unlink($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$data['raw_name'].'_350'.strtolower($data['file_ext']));
-              }
+              }            
               
               $this->load->library('image_lib');
               
