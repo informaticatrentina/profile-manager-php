@@ -37,6 +37,7 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+
 $lang['form_validation_required'] = 'Il campo {field} è necessario.';
 $lang['form_validation_isset'] = 'Il campo {field} deve avere un valore.';
 $lang['form_validation_valid_email'] = 'Il campo {field} deve contenere un indirizzo email valido.';
