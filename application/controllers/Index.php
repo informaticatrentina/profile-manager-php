@@ -29,7 +29,7 @@ class Index extends CI_Controller
         $this->form_validation->set_rules('email', 'Email', 'required|valid_email|trim');
         $this->form_validation->set_rules('password', 'Password', 'required|trim');
              
-        $this->form_validation->set_error_delimiters('<div class="alert alert-warning">', '</div>');
+        $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
 
         if($this->form_validation->run($this) === FALSE)
         {
@@ -54,13 +54,13 @@ class Index extends CI_Controller
             else
             {
               $json['response']='error';
-              $json['message']='<div class="alert alert-warning">'.$this->profilemanagerlibrary->getMessage().'</div>';
+              $json['message']='<div class="alert alert-danger">'.$this->profilemanagerlibrary->getMessage().'</div>';
             }           
           }
           else
           {
             $json['response']='error';
-            $json['message']='<div class="alert alert-warning">'.$this->profilemanagerlibrary->getMessage().'</div>';
+            $json['message']='<div class="alert alert-danger">'.$this->profilemanagerlibrary->getMessage().'</div>';
           }          
         }
         $this->output->set_content_type('application/json')->set_output(json_encode($json));
@@ -84,7 +84,12 @@ class Index extends CI_Controller
       }
       else
       {
-        $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
+        $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);  
+
+        if(isset($data['user_data']['nickname'] ) && $data['user_data']['nickname'] == " ")
+        {
+           $data['user_data']['nickname'] = null;
+        }   
         if(file_exists($_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg'))
         {
           $data['photo']=$_SERVER['DOCUMENT_ROOT'].$this->config->item('UPLOAD_FOLDER').$this->config->item('IMAGE_FOLDER').'/'.$user_id.'_150.jpg';
@@ -160,15 +165,15 @@ class Index extends CI_Controller
       {
         $this->form_validation->set_rules('_id', '_id', 'required|trim');
         $this->form_validation->set_rules('firstname', 'Nome', 'required|trim|min_length[1]|max_length[132]');
-        if(isset($_POST['nickname']) && !empty($_POST['lastname'])) $this->form_validation->set_rules('lastname', 'Cognome', 'required|trim|min_length[1]|max_length[132]');
-        if(isset($_POST['nickname']) && !empty($_POST['nickname'])) $this->form_validation->set_rules('nickname', 'Nick Name', 'required|trim|min_length[1]|max_length[132]|callback__checkNickName');       
+        if(isset($_POST['lastname']) && !empty($_POST['lastname'])) $this->form_validation->set_rules('lastname', 'Cognome', 'required|trim|min_length[1]|max_length[132]');
+        if(isset($_POST['nickname']) && !empty($_POST['nickname'])) $this->form_validation->set_rules('nickname', 'Nick Name', 'min_length[2]|max_length[132]|callback__checkNickName|callback__checkNickNameFormat');       
         $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');       
         $this->form_validation->set_rules('biography', 'Biografia', 'trim|min_length[1]|max_length[150]');       
         $this->form_validation->set_rules('website', 'Website', 'trim|valid_url'); 
         if(!empty($_POST['new_password'])) $this->form_validation->set_rules('new_password', 'Password', 'required|min_length[3]'); 
         if(!empty($_POST['new_password'])) $this->form_validation->set_rules('con_password', 'Ripeti Password', 'required|min_length[3]|matches[new_password]'); 
         
-        $this->form_validation->set_error_delimiters('<div class="alert alert-warning">', '</div>');
+        $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
         $json['response']='';
     
         if($this->form_validation->run($this) === FALSE)
@@ -182,6 +187,7 @@ class Index extends CI_Controller
           $firstname=xss_clean($this->input->post('firstname'));
           $lastname=xss_clean($this->input->post('lastname'));
           $nickname=xss_clean($this->input->post('nickname'));
+          if(empty($nickname) && $nickname == "") $nickname = " ";
           $email=xss_clean($this->input->post('email'));
           $sex=$this->input->post('sex');
           $location=xss_clean($this->input->post('location'));
@@ -210,7 +216,7 @@ class Index extends CI_Controller
           if(!$this->profilemanagerlibrary->patchUserData($user_id,$data))
           {
              $json['response']='error';
-             $json['message']='<div class="alert alert-warning">'.$this->profilemanagerlibrary->getMessage().'</div>';          
+             $json['message']='<div class="alert alert-danger">'.$this->profilemanagerlibrary->getMessage().'</div>';          
           }
           
           // Effettuo l'upload della foto se non sono stati rilevati errori in precendenza         
@@ -236,7 +242,7 @@ class Index extends CI_Controller
             if (!$this->upload->do_upload('photo'))
             {
               $json['response']='error';
-              $json['message']='<div class="alert alert-warning">'.$this->upload->display_errors().'</div>'; 
+              $json['message']='<div class="alert alert-danger">'.$this->upload->display_errors().'</div>'; 
             }
             else
             {
@@ -264,7 +270,7 @@ class Index extends CI_Controller
               if (!$this->image_lib->resize()) 
               {
                 $json['response']='error';
-                $json['message']='<div class="alert alert-warning">'.$this->image_lib->display_errors().'</div>';   
+                $json['message']='<div class="alert alert-danger">'.$this->image_lib->display_errors().'</div>';   
               } 
               
               $this->image_lib->clear();            
@@ -281,7 +287,7 @@ class Index extends CI_Controller
               if (!$this->image_lib->resize()) 
               {
                 $json['response']='error';
-                $json['message']='<div class="alert alert-warning">'.$this->image_lib->display_errors().'</div>';   
+                $json['message']='<div class="alert alert-danger">'.$this->image_lib->display_errors().'</div>';   
               } 
               
               $this->image_lib->clear();
@@ -314,5 +320,23 @@ class Index extends CI_Controller
       }
       else return TRUE; 
     }
+
+	/**
+	 *
+	 *Funzione di controllo validita username, controlla se il nickname e' composto da lettere e numeri ()
+	 */
+	public function _checkNickNameFormat($field)
+	{
+
+		  if(preg_match('/[^A-Za-z0-9]/',$field))
+		  {
+			$this->form_validation->set_message('_checkNickNameFormat', 'Attenzione, il NickName presenta caratteri non validi.');
+			return FALSE;
+		  }
+		  else return TRUE;
+
+	}
+
+
         
 }

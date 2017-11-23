@@ -149,7 +149,7 @@
                         <h1 class="name">
                           <?php if(isset($user_data['firstname']) && !empty($user_data['firstname'])): ?><?php echo $user_data['firstname']; ?><?php endif; ?>
                           <?php if(isset($user_data['lastname']) && !empty($user_data['lastname'])): ?><?php echo ' '.$user_data['lastname']; ?><?php endif; ?>                            
-                          <?php if(isset($user_data['nickname']) && !empty($user_data['nickname'])): ?><?php echo ' ('.$user_data['nickname'].')'; ?><?php endif; ?>                            
+                          <?php if(isset($user_data['nickname']) && !empty($user_data['nickname']) && trim($user_data['nickname']) != ""): ?><?php echo ' ('.$user_data['nickname'].')'; ?><?php endif; ?>                            
                         </h1>
                    </div>
 
