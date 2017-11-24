@@ -16,12 +16,26 @@ class Index extends CI_Controller
       $this->load->library('form_validation');
       $this->load->library('ProfileManagerLibrary');
     }
-    
+	
+	
+   /*
+	* Function index
+	*
+	* Funzione principale , gestisce il redirect verso la pagina di login
+	*/
     public function index()
     {
       redirect(base_url().'auth/login');      
     }
-    
+		
+	/*
+	 * Function auth
+	 *
+	 * Funzione che gestisce l autenticazione al sistema
+	 *
+	 *
+	 * @return (array)
+	 */
     public function auth()
     {
       if($this->input->is_ajax_request() && $this->input->server('REQUEST_METHOD') === 'POST')
@@ -70,7 +84,14 @@ class Index extends CI_Controller
         $this->load->view('auth/login');
       }
     }
-    
+	/*
+	* Function edit
+	*
+	* funzione che carica i dati utenti e gestisce la modifica di essi
+	*
+	* @param (int) id utente
+	* 
+	*/
     public function edit($user_id)
     {
       
@@ -102,7 +123,15 @@ class Index extends CI_Controller
         $this->load->view('user/edit',$data);       
       }      
     }
-    
+	
+	/*
+	* Function show
+	*
+	* Visualizza le informazioni del utente nella schermata principale
+	*
+	* @param (int) id utente
+	*
+	*/
     public function show($user_id)
     {      
       $sess_id=$this->session->userdata('_id');
@@ -129,7 +158,15 @@ class Index extends CI_Controller
         $this->load->view('user/show',$data);       
       }      
     }
-    
+	
+	/*
+	* Function photo
+	*
+	* Funzione che gestisce il salvataggio della foto utente nel sistema
+	*
+	* @param (array,array) foto, dimesioni foto
+	* @return (data) file caricato
+	*/
     public function photo($user_id,$dim)
     {
       $data['user_data']=$this->profilemanagerlibrary->getUserById($user_id);       
@@ -158,7 +195,15 @@ class Index extends CI_Controller
         readfile($data['photo']);         
       }
     }
-    
+	
+    /*
+	 * Function save
+	 *
+	 * Funzione che salva i dati utente nella schermata di modifica 
+	 *
+	 * 
+	 * @return (array)
+	 */
     public function save()
     {
       if($this->input->is_ajax_request() && $this->input->server('REQUEST_METHOD') === 'POST')
@@ -303,13 +348,27 @@ class Index extends CI_Controller
         $this->output->set_content_type('application/json')->set_output(json_encode($json));
       }
     }
-
+	
+	/*
+	 * Function logout
+	 *
+	 * Funzione che disconnette l utente dal sistema
+	 *
+	 */
     public function logout()
     {
       $this->session->sess_destroy();
       redirect(base_url().'auth/login');
     }
     
+	/*
+	 * Function _checkNickName
+	 *
+	 * funzione che controlla se il nickname che sto inserendo esiste gia nel sistema
+	 *
+	 * @param (string) campo nickname
+	 * @return (bool)
+	 */
     public function _checkNickName($field)
     {
       $id=$this->input->post('_id');
@@ -320,10 +379,14 @@ class Index extends CI_Controller
       }
       else return TRUE; 
     }
-
-	/**
+	
+	/*
+	 * Function _checkNickNameFormat
 	 *
-	 *Funzione di controllo validita username, controlla se il nickname e' composto da lettere e numeri ()
+	 * Controllo costruzione campo nickname, verifica che sia composto unicamente da lettere e numeri. Se sono presenti spazi, simboli verrà impedita la modifica del valore
+	 *
+	 * @param (string) campo nickname
+	 * @return (bool)
 	 */
 	public function _checkNickNameFormat($field)
 	{
