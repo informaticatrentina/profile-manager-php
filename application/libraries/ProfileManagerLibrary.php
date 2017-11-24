@@ -142,9 +142,9 @@ class ProfileManagerLibrary
     {
       // Converto il risultato da JSON in Array
       $result_arr=json_decode($result,TRUE);   
-      if(isset($result_arr['_items'][0]['_id']) && !empty($result_arr['_items'][0]['_id']))
+      if(isset($result_arr['_items']) && !empty($result_arr['_items']))
       {
-        if($result_arr['_items'][0]['_id']==$user_id) return TRUE;
+        if($result_arr['_items']==$user_id) return TRUE;
         else return FALSE;
       }
       else return TRUE;
